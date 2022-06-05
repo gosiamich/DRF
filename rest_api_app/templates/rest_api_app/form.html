@@ -5,6 +5,9 @@
     <form method="post">
      {% csrf_token %}
         <div class="message">  <strong> {{ message }} </strong></div>
+        {% for book in books %}
+            <li>{{ book }}</li>
+        {% endfor %}
         <div class="p_table">
 
         {{ form.as_p }}

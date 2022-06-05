@@ -85,10 +85,12 @@ class ApiImportBook(View):
             title = form.cleaned_data['title']
             url = url = 'https://www.googleapis.com/books/v1/volumes?q={}'
             search_data = requests.get(url.format(title)).json()
-
             items = search_data.get('items')
+            books = []
+            for item in items:
+                books.append(item['volumeInfo']['title'])
             print(search_data)
-            return render(request, 'rest_api_app/form.html', {'form': form, 'message': items})
+            return render(request, 'rest_api_app/form.html', {'form': form, 'books': books})
 
 
 
