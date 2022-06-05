@@ -1,0 +1,57 @@
+{% extends 'rest_api_app/base.html' %}
+ {% load static %}
+
+{#<link rel="stylesheet" type="text/css" href="{% static 'table.css' %}">#}
+{% block content %}
+     <form method="post">
+     {% csrf_token %}
+        <strong> {{ message }} </strong>
+        <div class="p_table">
+        {{ form.as_p }}
+
+        <input type="submit" value="Search">
+        </div>
+    </form>
+<div class="container">
+
+  <table class="responsive-table">
+{#    <caption>Summary at the end of table</caption>#}
+    <thead>
+      <tr>
+        <th scope="col">Title</th>
+        <th scope="cpl">Author</th>
+        <th scope="col">Year of publication</th>
+        <th scope="col">Pages</th>
+        <th scope="col">ISBN</th>
+        <th scope="col">Language</th>
+        <th scope="col">Caver</th>
+        <th>Update book</th>
+
+      </tr>
+    </thead>
+    <tfoot>
+      <tr>
+        <td colspan="7">Sources: <a href="https://www.googleapis.com/books">Google Api</a> </td>
+      </tr>
+    </tfoot>
+    <tbody>
+      {% for book in books %}
+        <tr>
+            <td><strong>{{ book.title }}</strong></td>
+            <td>{{ book.author }}</td>
+            <td>{{ book.publicate_year }}</td>
+            <td>{{ book.pages }}</td>
+            <td>{{ book.isbn_number }}</td>
+            <td>{{ book.language }}</td>
+          {% if book.image %}
+                <td><a href="{{ book.image }}"><img alt="image" src="{{ book.image.url }}"></a></td>
+            {% else %}
+                <td>-</td>
+            {% endif %}
+            <td> <a href="{{ book.get_update_url }}">Update book</a></td>
+        <tr>
+      {% endfor %}
+  </table>
+</div>
+
+{% endblock %}

@@ -1,0 +1,15 @@
+{% extends 'rest_api_app/base.html' %}
+ {% load static %}
+{% block content %}
+
+    <form method="post">
+     {% csrf_token %}
+        <div class="message">  <strong> {{ message }} </strong></div>
+        <div class="p_table">
+
+        {{ form.as_p }}
+
+        <input type="submit" value="Submit">
+        </div>
+    </form>
+{% endblock %}

@@ -1,0 +1,19 @@
+     <form class="item_form" method="post" action="#">
+         {% csrf_token %}
+            <h4>Wyszukiwarka filmów</h4>
+            <label>Tytuł</label>:</label><br>
+            <input name="title" type="text" /><br>
+            <label>Imię</label>:</label><br>
+            <input name="first_name" type="text" /><br>
+            <label>Nazwisko</label>:</label><br>
+            <input name="last_name" type="text" /><br>
+            <label>Rok produkcji</label>:</label><br>
+            <label>od</label>:</label><input name="year_from" type="number" step="1" />
+            <label>do</label>:</label><input name="year_to" type="number" step="1"/><br>
+            <label>Gatunek</label>:</label><br>
+            <input name="genre" type="text" /><br>
+            <label>Ocena</label>:</label><br>
+            <label>od</label>:</label><input name="rating_from" type="number" setp = 1/>
+            <label>do</label>:</label><input name="rating_to" type="number" step =1 /><br></br>
+            <button type="submit" anme="submit" class="btn btn-primary">Szukaj</button>
+    </form>

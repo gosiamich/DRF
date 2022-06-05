@@ -1,19 +1,19 @@
 <div id="sidebar" xmlns="http://www.w3.org/1999/html">
-    <header class="la_a>
-        <a href="#">Google Api</a>
+    <header class="la_a">
+        <a href="{%  url 'index' %}">Google Api</a>
     </header>
     <div id="li_a">
       <ul>
           <li>
           <li><a href="#">Add book</a></li>
-          <li><a href="#">Search</a></li>
-          <li><a href="#">Aboute</a></li>
+          <li><a href="{%  url 'list_books' %}">List of books</a></li>
+          <li><a href="{%  url 'import_book' %}">Import book</a></li>
           </ul>
     </div>
 </div>
 <div id="container">
         <div style="display: flex; position: relative; text-align: left; margin-left: 1500px">
-           <a href="#">import ----> Books</a>
+           <a href="http://127.0.0.1:8000/admin/login/?next=/admin/">ADMIN</a>
         </div>
     <div class="container-fluid"> </div>
  </div>

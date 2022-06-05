@@ -120,10 +120,12 @@ li {
 }
 
 
-table, th, td {
+th, td {
+    background-color: white;
+    opacity: 80%;
   font-size: 15px;
   padding: 10px 20px;
-  border: 1px solid green;
+  border: 2px solid black;
   border-collapse: collapse;
 }
 
@@ -144,4 +146,40 @@ table, th, td {
 
  div .div_a {
     line-height: 5px;
+}
+
+ .responsive-table {
+     background-color: lightgray;
+     opacity: 80%;
+     margin-top: 100px;
+     margin-right: 100px;
+     position: fixed;
+     margin-bottom: 1.5em;
+     border-spacing: 0;
+ }
+
+
+thead {
+/ / Accessibly hide < thead > on narrow viewports position: absolute;
+    clip: rect(1px 1px 1px 1px); /* IE6, IE7 */
+    padding: 0;
+    border: 0;
+    height: 1px;
+    width: 1px;
+    overflow: hidden;
+}
+
+
+.p_table{
+    margin-left:100px;
+    margin-top: 150px;
+}
+
+.message {
+    float: left;
+    margin-top: 100px;
+    padding: 15px 15px;
+    text-decoration: none;
+    font-size: 17px;
+    border: 10px;
 }
