@@ -4,10 +4,10 @@ from django.urls import reverse_lazy
 from django.views import View
 
 # Create your views here.
-from django.views.generic import UpdateView
+from django.views.generic import UpdateView, CreateView
 
 from rest_api_app.forms import SearchForm, ApiImportBookForm
-from rest_api_app.models import Book
+from rest_api_app.models import Book, Author
 
 
 class Index(View):
@@ -57,9 +57,16 @@ class BookList(View):
         return render(request, 'rest_api_app/table.html', {'books': books, 'form': form})
 
 
-class UpdateViewVBook(UpdateView):
+
+class UpdateViewBook(UpdateView):
     model = Book
     fields = '__all__'
+    success_url = reverse_lazy('list_books')
+    template_name = 'rest_api_app/form.html'
+
+class CreateViewBook(CreateView):
+    model = Author
+    fields = ['name']
     success_url = reverse_lazy('list_books')
     template_name = 'rest_api_app/form.html'
 
@@ -88,7 +95,29 @@ class ApiImportBook(View):
             items = search_data.get('items')
             books = []
             for item in items:
-                books.append(item['volumeInfo']['title'])
+                title=item['volumeInfo']['title']
+                authors=item['volumeInfo'].get('authors')
+                publishedDate=item['volumeInfo']['publishedDate'][0:4]
+                ISBN=item['volumeInfo'].get('industryIdentifiers')
+                pageCount=item['volumeInfo']['pageCount']
+                imageLinks=item['volumeInfo'].get('imageLinks')
+                language=item['volumeInfo']['language']
+                book, created = Book.objects.get_or_create(title=title,
+                                                           author=authors,
+                                                           publicate_year=publishedDate,
+                                                           pages=pageCount,
+                                                           language=language)
+                for name in authors:
+                    book.authors.add(name)
+                for no in ISBN:
+                    if no['type']['ISBN_10']:
+                        isbn = no['identifier']
+                    elif no['type']['ISBN_13']:
+                        isbn = no['identifier']
+                book.isbn_number = isbn
+                book.cover =imageLinks.get('smallThumbnail')
+                book.save()
+                books.append(book)
             print(search_data)
             return render(request, 'rest_api_app/form.html', {'form': form, 'books': books})
 

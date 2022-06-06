@@ -1,10 +1,16 @@
 from django.db import models
 from django.urls import reverse
 
+class Author(models.Model):
+    name = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.name
+
 
 class Book(models.Model):
     title = models.CharField(max_length=256)
-    author = models.CharField(max_length=256)
+    authors = models.ManyToManyField(Author)
     publicate_year = models.IntegerField(null=True)
     pages = models.IntegerField(null=True)
     isbn_number = models.CharField(max_length=100, null=True)
@@ -16,3 +22,6 @@ class Book(models.Model):
 
     def get_update_url(self):
         return f'/update_book/{self.id}/'
+
+    def all_authors(self):
+        return ', '.join([item.name for item in self.authors.all()])
