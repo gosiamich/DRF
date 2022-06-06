@@ -99,23 +99,22 @@ class ApiImportBook(View):
                 authors=item['volumeInfo'].get('authors')
                 publishedDate=item['volumeInfo']['publishedDate'][0:4]
                 ISBN=item['volumeInfo'].get('industryIdentifiers')
-                pageCount=item['volumeInfo']['pageCount']
+                pageCount=item['volumeInfo'].get('pageCount')
                 imageLinks=item['volumeInfo'].get('imageLinks')
                 language=item['volumeInfo']['language']
                 book, created = Book.objects.get_or_create(title=title,
-                                                           author=authors,
                                                            publicate_year=publishedDate,
                                                            pages=pageCount,
                                                            language=language)
                 for name in authors:
-                    book.authors.add(name)
+                    name = name.strip()
+                    author, created = Author.objects.get_or_create(name=name)
+                    book.authors.add(author)
                 for no in ISBN:
-                    if no['type']['ISBN_10']:
+                    if no['type'] == ['ISBN_10']:
                         isbn = no['identifier']
-                    elif no['type']['ISBN_13']:
-                        isbn = no['identifier']
-                book.isbn_number = isbn
-                book.cover =imageLinks.get('smallThumbnail')
+                        book.isbn_number = isbn
+                # book.cover =imageLinks.get('smallThumbnail')
                 book.save()
                 books.append(book)
             print(search_data)
