@@ -1,4 +1,5 @@
 import requests
+from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse_lazy
 from django.views import View
@@ -31,7 +32,10 @@ def books():
 class BookList(View):
     def get(self, request):
         form = SearchForm()
-        books = Book.objects.all()
+        list_books = Book.objects.all()
+        paginator = Paginator(list_books, 5)
+        page = request.GET.get('page')
+        books = paginator.get_page(page)
         return render(request, 'rest_api_app/table.html', {'books': books, 'form': form})
 
     def post(self, request):
@@ -53,7 +57,10 @@ class BookList(View):
                 books = books.filter(publicate_year__lte=year_to)
             if year_from:
                 books = books.filter(publicate_year__gte=year_from)
-            return render(request, 'rest_api_app/table.html', {'books': books, 'form': form})
+            paginator = Paginator(books, 5)
+            page = request.GET.get('page')
+            list = paginator.get_page(page)
+            return render(request, 'rest_api_app/table.html', {'books': list, 'form': form})
         return render(request, 'rest_api_app/table.html', {'books': books, 'form': form})
 
 

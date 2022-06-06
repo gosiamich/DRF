@@ -151,8 +151,8 @@ th, td {
  .responsive-table {
      background-color: lightgray;
      opacity: 80%;
-     margin-top: 100px;
-     margin-right: 100px;
+     margin-top: 10px;
+     margin-left: 100px;
      position: fixed;
      margin-bottom: 1.5em;
      border-spacing: 0;
@@ -172,6 +172,6 @@ thead {
 
 .p_table{
     margin-left:100px;
-    margin-top: 100px;
+    margin-top: 50px;
 }
 
