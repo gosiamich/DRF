@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path
+from django.urls import path, include
 from rest_api_app.views import Index, BookList, UpdateViewBook, ApiImportBook, CreateViewBook
 
 urlpatterns = [
@@ -24,4 +24,5 @@ urlpatterns = [
     path('update_book/<int:pk>/', UpdateViewBook.as_view(), name='update_book'),
     path('import_book/', ApiImportBook.as_view(), name='import_book'),
     path('create_author', CreateViewBook.as_view(), name='create_author'),
+    path('',include('API.urls'))
 ]
