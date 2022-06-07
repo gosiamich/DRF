@@ -14,7 +14,7 @@
     </form>
 <div class="container">
 
-  <table class="responsive-table">
+  <table >
 {#    <caption>Summary at the end of table</caption>#}
     <thead>
       <tr>
@@ -43,11 +43,7 @@
             <td>{{ book.pages }}</td>
             <td>{{ book.isbn_number }}</td>
             <td>{{ book.language }}</td>
-          {% if book.image %}
-                <td><a href="{{ book.image }}"><img alt="image" src="{{ book.image.url }}"></a></td>
-            {% else %}
-                <td>-</td>
-            {% endif %}
+            <td>{{ book.show_url }}</td>
             <td> <a href="{{ book.get_update_url }}">Update book</a></td>
         <tr>
       {% endfor %}

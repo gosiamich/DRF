@@ -1,5 +1,7 @@
 from django.db import models
 from django.urls import reverse
+from django.utils.html import format_html
+
 
 class Author(models.Model):
     name = models.CharField(max_length=100)
@@ -25,3 +27,9 @@ class Book(models.Model):
 
     def all_authors(self):
         return ', '.join([item.name for item in self.authors.all()])
+
+    def show_url(self):
+        if self.cover is not None:
+            return format_html(f'<a href="{self.cover}">{self.cover}</a>')
+        else:
+            return ''

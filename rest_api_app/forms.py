@@ -48,9 +48,11 @@ class ApiImportBookForm(forms.Form):
     isbn = forms.CharField(min_length=10, max_length=13, label='', required=False,
                            widget=forms.TextInput(attrs={'placeholder': 'ISBN'}))
     lccn = forms.CharField(max_length=128, label='', required=False,
-                           widget=forms.TextInput(attrs={'placeholder': 'Library of Congress Control Number'}))
+                           help_text='Library of Congress Control Number',
+                           widget=forms.TextInput(attrs={'placeholder': 'LCCN'}))
     oclc = forms.CharField(max_length=128, label='', required=False,
-                           widget=forms.TextInput(attrs={'placeholder': 'Online Computer Library Center number'}))
+                           help_text='Online Computer Library Center number',
+                           widget=forms.TextInput(attrs={'placeholder': 'OCCN'}))
 
 
 

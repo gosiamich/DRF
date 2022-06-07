@@ -64,12 +64,12 @@ class BookList(View):
         return render(request, 'rest_api_app/table.html', {'books': books, 'form': form})
 
 
-
 class UpdateViewBook(UpdateView):
     model = Book
     fields = '__all__'
     success_url = reverse_lazy('list_books')
     template_name = 'rest_api_app/form.html'
+
 
 class CreateViewBook(CreateView):
     model = Author
@@ -79,7 +79,7 @@ class CreateViewBook(CreateView):
 
 
 def books():
-    url = url='https://www.googleapis.com/books/v1/volumes?q={}'
+    url = url = 'https://www.googleapis.com/books/v1/volumes?q={}'
     search = 'Hobbit'
     search_data = requests.get(url.format(search)).json()
     items = search_data.get('items')
@@ -97,35 +97,62 @@ class ApiImportBook(View):
         form = ApiImportBookForm(request.POST)
         if form.is_valid():
             title = form.cleaned_data['title']
-            url = url = 'https://www.googleapis.com/books/v1/volumes?q={}'
-            search_data = requests.get(url.format(title)).json()
+            author = form.cleaned_data.get('author')
+            publisher = form.cleaned_data.get('publisher')
+            subject = form.cleaned_data.get('subject')
+            isbn = form.cleaned_data.get('isbn')
+            lccn = form.cleaned_data.get('lccn')
+            oclc = form.cleaned_data.get('oclc')
+            input_data = ''
+            if title:
+                input_data += f'{title}+intitle&'
+            if author:
+                input_data += f'{author}+inauthor&'
+            if publisher:
+                input_data += f'{publisher}+inpublisher&'
+            if subject:
+                input_data += f'{subject}+subject&'
+            if isbn:
+                input_data += f'{isbn}+isbn&'
+            if lccn:
+                input_data += f'{lccn}+lccn&'
+            if oclc:
+                input_data += f'+{oclc}intitle&'
+
+            url = 'https://www.googleapis.com/books/v1/volumes?q={}&printType=books'
+            url2 = url.format(input_data)
+            # breakpoint()
+            search_data = requests.get(url.format(input_data)).json()
             items = search_data.get('items')
             books = []
             for item in items:
-                title=item['volumeInfo']['title']
-                authors=item['volumeInfo'].get('authors')
-                publishedDate=item['volumeInfo']['publishedDate'][0:4]
-                ISBN=item['volumeInfo'].get('industryIdentifiers')
-                pageCount=item['volumeInfo'].get('pageCount')
-                imageLinks=item['volumeInfo'].get('imageLinks')
-                language=item['volumeInfo']['language']
+                title = item['volumeInfo']['title']
+                authors = item['volumeInfo'].get('authors', [])
+                publishedDate = item['volumeInfo']['publishedDate'][0:4]
+                ISBN = item['volumeInfo'].get('industryIdentifiers')
+                pageCount = item['volumeInfo'].get('pageCount')
+                imageLinks = item['volumeInfo'].get('imageLinks')
+                smallThumbnail = imageLinks['smallThumbnail']
+                language = item['volumeInfo']['language']
                 book, created = Book.objects.get_or_create(title=title,
                                                            publicate_year=publishedDate,
                                                            pages=pageCount,
                                                            language=language)
-                for name in authors:
-                    name = name.strip()
-                    author, created = Author.objects.get_or_create(name=name)
-                    book.authors.add(author)
+                breakpoint()
+                if len(authors) > 0:
+                    for name in authors:
+                        if len(Author.objects.filter(name=name)) < 1:
+                            author = Author.objects.create(name=name)
+                            book.authors.add(author)
+                        else:
+                            book.authors.add(Author.objects.get(name=name))
                 for no in ISBN:
-                    if no['type'] == ['ISBN_10']:
+                    if no['type'] == ['ISBN_13']:
                         isbn = no['identifier']
                         book.isbn_number = isbn
-                # book.cover =imageLinks.get('smallThumbnail')
+
+                book.cover =imageLinks.get('smallThumbnail')
                 book.save()
                 books.append(book)
             print(search_data)
             return render(request, 'rest_api_app/form.html', {'form': form, 'books': books})
-
-
-
