@@ -1,4 +1,6 @@
+import django_filters
 from django.http import Http404
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status, viewsets, renderers
@@ -9,12 +11,23 @@ from rest_framework.decorators import action
 from rest_framework import permissions
 
 
+class BookFilter(django_filters.FilterSet):
+    class Meta:
+        model = Book
+        fields = {
+                "title": ["icontains"],
+                "authors": ["icontains"],
+                "publicate_year": ["iexact", "gte", "lte"],
+            }
+
 class GenericBookList(generics.ListCreateAPIView):
     """
       List all books, or create a new book.
       """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = BookFilter
 
 class GenericBookDetail(generics.RetrieveUpdateDestroyAPIView):
     """
