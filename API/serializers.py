@@ -5,7 +5,7 @@ from rest_api_app.models import Book, Author
 class BookSerializer(serializers.ModelSerializer):
     class Meta:
         model = Book
-        fields = '__all__'
+        fields = ['title', 'authors', 'publicate_year', 'pages', 'isbn_number', 'cover', 'language']
 
 
 class BookField(serializers.RelatedField):
