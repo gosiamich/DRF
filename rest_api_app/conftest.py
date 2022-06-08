@@ -14,4 +14,12 @@ def book():
 
 @pytest.fixture
 def author():
-    return Author.objects.create(title="Xxx")
+    return Author.objects.create(name="Xxx")
+
+@pytest.fixture
+def book_list():
+    list =[]
+    for i in range(3):
+        book = Book.objects.create(title=i)
+        list.append(book)
+    return list

@@ -7,13 +7,15 @@
       <div class="slogan container container--90">
         <div class="slogan--item">
           <h1>
-            Google Api - BOOKS
+            Google Api - BOOKS about Python
           </h1>
         </div>
       </div>
-{{ w }}
-
-
+    <ul>
+    {%  for book in w %}
+    <h3>  <strong> <li> {{ book }} </li></strong></h3>
+    {%  endfor %}
+    </ul>
 {% endblock %}
 
 

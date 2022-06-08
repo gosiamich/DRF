@@ -10,23 +10,21 @@ from django.views.generic import UpdateView, CreateView
 from rest_api_app.forms import SearchForm, ApiImportBookForm
 from rest_api_app.models import Book, Author
 
+def books():
+    url = url = 'https://www.googleapis.com/books/v1/volumes?q={}'
+    search = 'Python'
+    search_data = requests.get(url.format(search)).json()
+    items = search_data.get('items')
+    list=[]
+    result=[]
+    for book in items:
+        list.append(book)
+        result.append(book['volumeInfo']['title'])
+    return result
 
 class Index(View):
     def get(self, request):
         return render(request, 'rest_api_app/index.html', {'w': books()})
-
-
-def books():
-    url = 'https://www.googleapis.com/books/v1/volumes?q=Hobbit'
-    response = requests.get(url)
-    book = response.json()
-    data = book.get('items')
-    list = []
-    for book in data:
-        list.append(book)
-
-    print(list)
-    return data
 
 
 class BookList(View):
@@ -36,7 +34,7 @@ class BookList(View):
         paginator = Paginator(list_books, 5)
         page = request.GET.get('page')
         books = paginator.get_page(page)
-        return render(request, 'rest_api_app/table.html', {'books': books, 'form': form})
+        return render(request, 'rest_api_app/table.html', {'books': books, 'list_books':list_books, 'form': form})
 
     def post(self, request):
         form = SearchForm(request.POST)
@@ -76,15 +74,6 @@ class CreateViewBook(CreateView):
     fields = ['name']
     success_url = reverse_lazy('list_books')
     template_name = 'rest_api_app/form.html'
-
-
-def books():
-    url = url = 'https://www.googleapis.com/books/v1/volumes?q={}'
-    search = 'Hobbit'
-    search_data = requests.get(url.format(search)).json()
-    items = search_data.get('items')
-    print(search_data)
-    return items
 
 
 class ApiImportBook(View):
