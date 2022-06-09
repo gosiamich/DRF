@@ -1,10 +1,8 @@
-from django.contrib.auth.models import User
-from django.test import TestCase
 from django.test import Client
 import pytest
 from django.urls import reverse
 
-from rest_api_app.forms import SearchForm
+from rest_api_app.forms import SearchForm, ApiImportBookForm
 from rest_api_app.models import Book, Author
 
 
@@ -73,7 +71,58 @@ def test_UpdateViewBook_post(book):
     data = {
         'title': 'New title',
         }
+    client.post(url, data)
+    book.refresh_from_db()
+    assert(book.title,'New title')
+
+
+
+@pytest.mark.django_db
+def test_CreateViewBook_get():
+    client = Client()
+    url = reverse('create_author')
+    response = client.get(url)
+    assert response.status_code == 200
+
+@pytest.mark.django_db
+def test_CreateViewAuthor_post():
+    client = Client()
+    url = reverse('create_author')
+    data = {
+        'name': 'New author',
+        }
     response = client.post(url, data)
-    breakpoint()
-    Book.objects.get(title='New title')
+    assert response.status_code == 302
+    new_url = reverse('list_books')
+    assert response.url.startswith(new_url)
+    Author.objects.get(**data)
+
+
+@pytest.mark.django_db
+def test_ApiImportBook_get():
+    client = Client()
+    url = reverse('import_book')
+    response = client.get(url)
+    assert response.status_code == 200
+    assert isinstance(response.context['form'], ApiImportBookForm)
+
+
+@pytest.mark.django_db
+def test_ApiImportBook_post():
+    client = Client()
+    url = reverse('import_book')
+    data = {
+        'title': 'title',
+        'author': 'author',
+        'publisher': 'publisher',
+        'isbn': '1234512345123',
+        'subject': 'subject',
+        'lccn': 'lccn',
+        'oclc': 'oclc'
+    }
+    response = client.post(url, data, format='json')
+    assert response.status_code == 302
+    new_url = reverse('list_books')
+    assert response.url.startswith(new_url)
+
 

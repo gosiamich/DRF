@@ -1,5 +1,5 @@
 import pytest
-from django.contrib.auth.models import User, Permission
+from django.contrib.auth.models import User
 
 from rest_api_app.models import Book, Author
 

@@ -10,17 +10,19 @@ from django.views.generic import UpdateView, CreateView
 from rest_api_app.forms import SearchForm, ApiImportBookForm
 from rest_api_app.models import Book, Author
 
+
 def books():
     url = url = 'https://www.googleapis.com/books/v1/volumes?q={}'
     search = 'Python'
     search_data = requests.get(url.format(search)).json()
     items = search_data.get('items')
-    list=[]
-    result=[]
+    list = []
+    result = []
     for book in items:
         list.append(book)
         result.append(book['volumeInfo']['title'])
     return result
+
 
 class Index(View):
     def get(self, request):
@@ -34,7 +36,7 @@ class BookList(View):
         paginator = Paginator(list_books, 5)
         page = request.GET.get('page')
         books = paginator.get_page(page)
-        return render(request, 'rest_api_app/table.html', {'books': books, 'list_books':list_books, 'form': form})
+        return render(request, 'rest_api_app/table.html', {'books': books, 'list_books': list_books, 'form': form})
 
     def post(self, request):
         form = SearchForm(request.POST)
@@ -69,7 +71,7 @@ class UpdateViewBook(UpdateView):
     template_name = 'rest_api_app/form.html'
 
 
-class CreateViewBook(CreateView):
+class CreateViewAuthor(CreateView):
     model = Author
     fields = ['name']
     success_url = reverse_lazy('list_books')
@@ -109,10 +111,9 @@ class ApiImportBook(View):
                 input_data += f'+{oclc}intitle&'
 
             url = 'https://www.googleapis.com/books/v1/volumes?q={}&printType=books'
-            url2 = url.format(input_data)
-            # breakpoint()
             search_data = requests.get(url.format(input_data)).json()
             items = search_data.get('items')
+            # breakpoint()
             books = []
             for item in items:
                 title = item['volumeInfo']['title']
@@ -121,13 +122,12 @@ class ApiImportBook(View):
                 ISBN = item['volumeInfo'].get('industryIdentifiers')
                 pageCount = item['volumeInfo'].get('pageCount')
                 imageLinks = item['volumeInfo'].get('imageLinks')
-                smallThumbnail = imageLinks['smallThumbnail']
                 language = item['volumeInfo']['language']
                 book, created = Book.objects.get_or_create(title=title,
                                                            publicate_year=publishedDate,
                                                            pages=pageCount,
                                                            language=language)
-                breakpoint()
+                # breakpoint()
                 if len(authors) > 0:
                     for name in authors:
                         if len(Author.objects.filter(name=name)) < 1:
@@ -140,10 +140,8 @@ class ApiImportBook(View):
                         isbn = no['identifier']
                         book.isbn_number = isbn
 
-                book.cover =imageLinks.get('smallThumbnail')
+                book.cover = imageLinks.get('smallThumbnail')
                 book.save()
                 books.append(book)
             print(search_data)
             return render(request, 'rest_api_app/form.html', {'form': form, 'books': books})
-
-
