@@ -115,12 +115,12 @@ def test_ApiImportBook_post():
         'title': 'title',
         'author': 'author',
         'publisher': 'publisher',
-        'isbn': '1234512345123',
+        'isbn': '',
         'subject': 'subject',
         'lccn': 'lccn',
-        'oclc': 'oclc'
+        'oclc': ''
     }
-    response = client.post(url, data, format='json')
+    response = client.post(url, data)
     assert response.status_code == 302
     new_url = reverse('list_books')
     assert response.url.startswith(new_url)

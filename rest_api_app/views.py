@@ -2,7 +2,7 @@ import requests
 from django.core.paginator import Paginator
 from django.shortcuts import render
 from django.urls import reverse_lazy
-from django.views import View
+from django.views import View, generic
 
 # Create your views here.
 from django.views.generic import UpdateView, CreateView
@@ -27,6 +27,13 @@ def books():
 class Index(View):
     def get(self, request):
         return render(request, 'rest_api_app/index.html', {'w': books()})
+
+class CreateViewBook(CreateView):
+    model = Book
+    fields = ['title', 'authors', 'publicate_year', 'pages', 'isbn_number', 'cover', 'language']
+    success_url = reverse_lazy('list_books')
+    template_name = 'rest_api_app/form.html'
+
 
 
 class BookList(View):

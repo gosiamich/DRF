@@ -36,7 +36,6 @@ def test_get_book_detail(client, book):
         assert field in response.data
 
 
-
 @pytest.mark.django_db
 def test_AuthorViewSet_list(client, author):
     response = client.get(f"/authors/", {}, format='json')
@@ -84,8 +83,10 @@ def test_AuthorViewSet_update(client, author):
     author.refresh_from_db()
     assert author.name == 'New name'
 
+
 """"
 """
+
 
 @pytest.mark.django_db
 def test_BookViewSet_list(client, book):
@@ -115,6 +116,27 @@ def test_BookViewSet_delete(client, book):
 @pytest.mark.django_db
 def test_BookViewSet_add(client):
     new_book = {
+        "title": "Tesst",
+        "authors": [
+            3
+        ],
+        "publicate_year": 1985,
+        "pages": 500,
+        "isbn_number": "2542558578",
+        "cover": "",
+        "language": "pl"
+    }
+    response = client.post("/books_api/", new_book, format='json')
+    assert response.status_code == 201
+    for key, value in new_book.items():
+        assert key in response.data
+        assert response.data[key] == value
+
+
+@pytest.mark.django_db
+def test_BookViewSet_update(client, book):
+    response = client.get(f"/books_api/{book.id}/", {}, format='json')
+    data = {
         "title": "Testtt",
         "authors": [
             3
@@ -125,21 +147,7 @@ def test_BookViewSet_add(client):
         "cover": "",
         "language": "pl"
     }
-    response = client.post("/books_api/", new_book, format='json')
-    assert response.status_code == 201
-    # for key, value in new_book.items():
-    #     assert key in response.data
-    #     assert response.data[key] == value
-
-
-@pytest.mark.django_db
-def test_BookViewSet_update(client, book):
-    response = client.get(f"/books_api/{book.id}/", {}, format='json')
-    input_data = response.data
-    input_data["title"] = 'New title'
-    response = client.patch(f"/books_api/{book.id}/", input_data, format='json')
+    response = client.patch(f"/books_api/{book.id}/", data, format='json')
     assert response.status_code == 200
     book.refresh_from_db()
     assert book.title == 'New title'
-
-

@@ -3,10 +3,6 @@ from django.core.exceptions import ValidationError
 
 from rest_api_app.models import Book
 
-
-
-
-
 # def check_year(year):
 #     if year < 1900 or year > 2022:
 #         raise ValidationError('Choose year between 1900-2021')
