@@ -4,13 +4,16 @@
     </header>
     <div id="li_a">
       <ul>
-          <li>
-          <li><a href="#">Add book</a></li>
+          <li><a href="{%  url 'create_author' %}">Add book</a></li>
           <li><a href="{%  url 'list_books' %}">List of books</a></li>
           <li><a href="{%  url 'create_book' %}">Create book</a></li>
           <li><a href="{%  url 'import_book' %}">Import book</a></li>
-          <li><a href="{%  url 'create_author' %}">Create author</a></li>
-          </ul>
+         </ul>
+        <p>Rest Api:</p>
+        <ul>
+            <li><a href="{%  url 'authors' %}">Autohrs</a></li>
+          <li><a href="{%  url 'books_api' %}">Books</a></li>
+        </ul>
     </div>
 </div>
 <div id="container">
